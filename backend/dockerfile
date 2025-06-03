@@ -1,0 +1,21 @@
+# Use Playwright’s Python image (with Chromium + deps)
+FROM mcr.microsoft.com/playwright/python:v1.40.0-focal
+
+WORKDIR /app
+
+# 1) Copy & install Python deps
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 2) Copy all backend code
+COPY . .
+
+# 3) Tell Playwright where to put its browser binaries
+ENV PLAYWRIGHT_BROWSERS_PATH=0
+
+# 4) Expose the port your Flask app listens on
+ENV PORT=5000
+EXPOSE 5000
+
+# 5) Start your app
+CMD ["python", "main.py"]
