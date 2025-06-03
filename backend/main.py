@@ -142,5 +142,6 @@ atexit.register(lambda: scheduler.shutdown())
 # ── Entry Point ───────────────────────────────────────────────
 
 if __name__ == "__main__":
-    print("→ Scheduler started: first account scrapes instantly, others every 60s.")
-    app.run(debug=True, port=5000)
+    import os
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)

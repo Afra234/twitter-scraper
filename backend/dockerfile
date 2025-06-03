@@ -1,21 +1,18 @@
-# Use Playwright’s Python image (with Chromium + deps)
-FROM mcr.microsoft.com/playwright/python:v1.40.0-focal
+# ─── Use Playwright’s Python image (includes headless Chromium) ───────
+FROM mcr.microsoft.com/playwright/python:v1-focal
 
 WORKDIR /app
 
-# 1) Copy & install Python deps
+# ─── Copy requirements.txt and install Python deps ───────────────────
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 2) Copy all backend code
+# ─── Copy the rest of your backend code ──────────────────────────────
 COPY . .
 
-# 3) Tell Playwright where to put its browser binaries
-ENV PLAYWRIGHT_BROWSERS_PATH=0
-
-# 4) Expose the port your Flask app listens on
+# ─── Expose the port Flask will run on (Railway sets PORT=5000) ─────
 ENV PORT=5000
 EXPOSE 5000
 
-# 5) Start your app
-CMD ["python", "main.py"]
+# ─── Start the Flask app via Uvicorn (fast, production‐style) ────────
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
